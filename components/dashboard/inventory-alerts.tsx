@@ -1,31 +1,38 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { products, projects } from "@/lib/data"
-import { ArrowRight, Package, AlertTriangle } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { products, projects } from "@/lib/data";
+import { ArrowRight, Package, AlertTriangle } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function InventoryAlerts() {
-  const criticalItems = products.filter((p) => p.status === "low-stock" || p.status === "out-of-stock")
+  const criticalItems = products.filter(
+    (p) => p.status === "low-stock" || p.status === "out-of-stock"
+  );
 
   return (
     <Card className="bg-card border-border">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold">Alertes Stock</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/inventory" className="flex items-center gap-1 text-primary">
+          <Link
+            href="/inventory"
+            className="flex items-center gap-1 text-primary"
+          >
             Voir tout <ArrowRight className="w-4 h-4" />
           </Link>
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
         {criticalItems.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">Aucune alerte de stock</p>
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Aucune alerte de stock
+          </p>
         ) : (
           criticalItems.map((product) => {
-            const project = projects.find((p) => p.id === product.projectId)
+            const project = projects.find((p) => p.id === product.projectId);
             return (
               <div
                 key={product.id}
@@ -33,7 +40,9 @@ export function InventoryAlerts() {
               >
                 <div
                   className={`p-2 rounded-lg ${
-                    product.status === "out-of-stock" ? "bg-destructive/10" : "bg-warning/10"
+                    product.status === "out-of-stock"
+                      ? "bg-destructive/10"
+                      : "bg-warning/10"
                   }`}
                 >
                   {product.status === "out-of-stock" ? (
@@ -43,9 +52,12 @@ export function InventoryAlerts() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-sm truncate">{product.name}</h4>
+                  <h4 className="font-medium text-sm truncate">
+                    {product.name}
+                  </h4>
                   <p className="text-xs text-muted-foreground">
-                    {product.quantity} / {product.minStock} min - {project?.name}
+                    {product.quantity} / {product.minStock} min -{" "}
+                    {project?.name}
                   </p>
                 </div>
                 <Badge
@@ -59,10 +71,10 @@ export function InventoryAlerts() {
                   {product.status === "out-of-stock" ? "Rupture" : "Bas"}
                 </Badge>
               </div>
-            )
+            );
           })
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

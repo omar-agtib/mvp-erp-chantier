@@ -1,59 +1,59 @@
 // Mock data store for the ERP MVP
 export interface Project {
-  id: string
-  name: string
-  client: string
-  status: "active" | "completed" | "on-hold"
-  progress: number
-  startDate: string
-  endDate: string
-  budget: number
-  spent: number
+  id: string;
+  name: string;
+  client: string;
+  status: "active" | "completed" | "on-hold";
+  progress: number;
+  startDate: string;
+  endDate: string;
+  budget: number;
+  spent: number;
 }
 
 export interface Product {
-  id: string
-  name: string
-  sku: string
-  quantity: number
-  minStock: number
-  location: string
-  projectId: string
-  status: "in-stock" | "low-stock" | "out-of-stock"
+  id: string;
+  name: string;
+  sku: string;
+  quantity: number;
+  minStock: number;
+  location: string;
+  projectId: string;
+  status: "in-stock" | "low-stock" | "out-of-stock";
 }
 
 export interface Tool {
-  id: string
-  name: string
-  code: string
-  status: "available" | "in-use" | "maintenance"
-  assignedTo?: string
-  projectId?: string
-  lastMaintenance: string
+  id: string;
+  name: string;
+  code: string;
+  status: "available" | "in-use" | "maintenance";
+  assignedTo?: string;
+  projectId?: string;
+  lastMaintenance: string;
 }
 
 export interface Issue {
-  id: string
-  title: string
-  description: string
-  projectId: string
-  priority: "urgent" | "high" | "medium" | "low"
-  status: "open" | "in-progress" | "resolved"
-  type: "non-conformity" | "modification" | "defect"
-  reportedBy: string
-  reportedAt: string
-  imageUrl?: string
+  id: string;
+  title: string;
+  description: string;
+  projectId: string;
+  priority: "urgent" | "high" | "medium" | "low";
+  status: "open" | "in-progress" | "resolved";
+  type: "non-conformity" | "modification" | "defect";
+  reportedBy: string;
+  reportedAt: string;
+  imageUrl?: string;
 }
 
 export interface Invoice {
-  id: string
-  projectId: string
-  client: string
-  amount: number
-  status: "draft" | "sent" | "paid" | "overdue"
-  dueDate: string
-  createdAt: string
-  items: { description: string; quantity: number; unitPrice: number }[]
+  id: string;
+  projectId: string;
+  client: string;
+  amount: number;
+  status: "draft" | "sent" | "paid" | "overdue";
+  dueDate: string;
+  createdAt: string;
+  items: { description: string; quantity: number; unitPrice: number }[];
 }
 
 // Mock Projects
@@ -102,7 +102,7 @@ export const projects: Project[] = [
     budget: 1800000,
     spent: 1720000,
   },
-]
+];
 
 // Mock Products
 export const products: Product[] = [
@@ -156,7 +156,7 @@ export const products: Product[] = [
     projectId: "PRJ-003",
     status: "in-stock",
   },
-]
+];
 
 // Mock Tools
 export const tools: Tool[] = [
@@ -169,7 +169,13 @@ export const tools: Tool[] = [
     projectId: "PRJ-001",
     lastMaintenance: "2025-11-15",
   },
-  { id: "TL-002", name: "Bétonnière 350L", code: "BET-350-002", status: "available", lastMaintenance: "2025-12-01" },
+  {
+    id: "TL-002",
+    name: "Bétonnière 350L",
+    code: "BET-350-002",
+    status: "available",
+    lastMaintenance: "2025-12-01",
+  },
   {
     id: "TL-003",
     name: "Marteau piqueur Hilti",
@@ -186,15 +192,22 @@ export const tools: Tool[] = [
     projectId: "PRJ-002",
     lastMaintenance: "2025-11-28",
   },
-  { id: "TL-005", name: "Compacteur Bomag", code: "COM-BOM-005", status: "available", lastMaintenance: "2025-12-10" },
-]
+  {
+    id: "TL-005",
+    name: "Compacteur Bomag",
+    code: "COM-BOM-005",
+    status: "available",
+    lastMaintenance: "2025-12-10",
+  },
+];
 
 // Mock Issues
 export const issues: Issue[] = [
   {
     id: "ISS-001",
     title: "Fissure mur porteur niveau 3",
-    description: "Fissure détectée sur le mur porteur du niveau 3, nécessite inspection structurelle",
+    description:
+      "Fissure détectée sur le mur porteur du niveau 3, nécessite inspection structurelle",
     projectId: "PRJ-001",
     priority: "urgent",
     status: "open",
@@ -216,7 +229,8 @@ export const issues: Issue[] = [
   {
     id: "ISS-003",
     title: "Défaut étanchéité toiture",
-    description: "Infiltration d'eau détectée au niveau de la jonction toiture-mur",
+    description:
+      "Infiltration d'eau détectée au niveau de la jonction toiture-mur",
     projectId: "PRJ-002",
     priority: "high",
     status: "open",
@@ -224,7 +238,7 @@ export const issues: Issue[] = [
     reportedBy: "Marc Dubois",
     reportedAt: "2025-12-17T11:00:00",
   },
-]
+];
 
 // Mock Invoices
 export const invoices: Invoice[] = [
@@ -237,7 +251,11 @@ export const invoices: Invoice[] = [
     dueDate: "2025-12-01",
     createdAt: "2025-11-01",
     items: [
-      { description: "Travaux de fondation - Phase 1", quantity: 1, unitPrice: 75000 },
+      {
+        description: "Travaux de fondation - Phase 1",
+        quantity: 1,
+        unitPrice: 75000,
+      },
       { description: "Matériaux béton armé", quantity: 1, unitPrice: 50000 },
     ],
   },
@@ -250,8 +268,16 @@ export const invoices: Invoice[] = [
     dueDate: "2025-12-30",
     createdAt: "2025-11-15",
     items: [
-      { description: "Structure métallique - Lot 2", quantity: 1, unitPrice: 180000 },
-      { description: "Installation électrique", quantity: 1, unitPrice: 100000 },
+      {
+        description: "Structure métallique - Lot 2",
+        quantity: 1,
+        unitPrice: 180000,
+      },
+      {
+        description: "Installation électrique",
+        quantity: 1,
+        unitPrice: 100000,
+      },
     ],
   },
   {
@@ -262,6 +288,8 @@ export const invoices: Invoice[] = [
     status: "overdue",
     dueDate: "2025-11-15",
     createdAt: "2025-10-15",
-    items: [{ description: "Travaux de plomberie", quantity: 1, unitPrice: 95000 }],
+    items: [
+      { description: "Travaux de plomberie", quantity: 1, unitPrice: 95000 },
+    ],
   },
-]
+];

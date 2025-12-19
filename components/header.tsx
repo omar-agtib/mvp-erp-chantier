@@ -71,7 +71,7 @@ export function Header() {
                 <User className="w-4 h-4 text-primary-foreground" />
               </div>
               <div className="text-left hidden sm:block">
-                <p className="text-sm font-medium">Jean Dupont</p>
+                <p className="text-sm font-medium">Kaoutar el moutaouakil</p>
                 <p className="text-xs text-muted-foreground">Chef d'équipe</p>
               </div>
             </Button>

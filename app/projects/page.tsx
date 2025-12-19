@@ -1,52 +1,72 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { projects as initialProjects, type Project } from "@/lib/data"
-import { Plus, Search, Calendar, Euro, Users, ArrowUpRight } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { projects as initialProjects, type Project } from "@/lib/data";
+import {
+  Plus,
+  Search,
+  Calendar,
+  Euro,
+  Users,
+  ArrowUpRight,
+} from "lucide-react";
+import Link from "next/link";
 
 const statusColors = {
   active: "bg-chart-1/20 text-chart-1 border-chart-1/30",
   completed: "bg-muted text-muted-foreground border-border",
   "on-hold": "bg-warning/20 text-warning border-warning/30",
-}
+};
 
 const statusLabels = {
   active: "En cours",
   completed: "Terminé",
   "on-hold": "En pause",
-}
+};
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>(initialProjects)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newProject, setNewProject] = useState({
     name: "",
     client: "",
     budget: "",
     startDate: "",
     endDate: "",
-  })
+  });
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.client.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === "all" || project.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      project.client.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || project.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const handleCreateProject = () => {
     const project: Project = {
@@ -59,11 +79,17 @@ export default function ProjectsPage() {
       endDate: newProject.endDate,
       budget: Number(newProject.budget),
       spent: 0,
-    }
-    setProjects([...projects, project])
-    setNewProject({ name: "", client: "", budget: "", startDate: "", endDate: "" })
-    setIsDialogOpen(false)
-  }
+    };
+    setProjects([...projects, project]);
+    setNewProject({
+      name: "",
+      client: "",
+      budget: "",
+      startDate: "",
+      endDate: "",
+    });
+    setIsDialogOpen(false);
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -74,7 +100,9 @@ export default function ProjectsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold">Projets</h1>
-              <p className="text-muted-foreground">Gérez et suivez vos projets de construction</p>
+              <p className="text-muted-foreground">
+                Gérez et suivez vos projets de construction
+              </p>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -92,7 +120,9 @@ export default function ProjectsPage() {
                     <Input
                       placeholder="Ex: Rénovation Tour Eiffel"
                       value={newProject.name}
-                      onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, name: e.target.value })
+                      }
                       className="bg-secondary border-border"
                     />
                   </div>
@@ -101,7 +131,9 @@ export default function ProjectsPage() {
                     <Input
                       placeholder="Nom du client"
                       value={newProject.client}
-                      onChange={(e) => setNewProject({ ...newProject, client: e.target.value })}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, client: e.target.value })
+                      }
                       className="bg-secondary border-border"
                     />
                   </div>
@@ -111,7 +143,9 @@ export default function ProjectsPage() {
                       type="number"
                       placeholder="1000000"
                       value={newProject.budget}
-                      onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
+                      onChange={(e) =>
+                        setNewProject({ ...newProject, budget: e.target.value })
+                      }
                       className="bg-secondary border-border"
                     />
                   </div>
@@ -121,7 +155,12 @@ export default function ProjectsPage() {
                       <Input
                         type="date"
                         value={newProject.startDate}
-                        onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
+                        onChange={(e) =>
+                          setNewProject({
+                            ...newProject,
+                            startDate: e.target.value,
+                          })
+                        }
                         className="bg-secondary border-border"
                       />
                     </div>
@@ -130,12 +169,20 @@ export default function ProjectsPage() {
                       <Input
                         type="date"
                         value={newProject.endDate}
-                        onChange={(e) => setNewProject({ ...newProject, endDate: e.target.value })}
+                        onChange={(e) =>
+                          setNewProject({
+                            ...newProject,
+                            endDate: e.target.value,
+                          })
+                        }
                         className="bg-secondary border-border"
                       />
                     </div>
                   </div>
-                  <Button onClick={handleCreateProject} className="w-full bg-primary text-primary-foreground">
+                  <Button
+                    onClick={handleCreateProject}
+                    className="w-full bg-primary text-primary-foreground"
+                  >
                     Créer le projet
                   </Button>
                 </div>
@@ -154,7 +201,7 @@ export default function ProjectsPage() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] bg-secondary border-border">
+              <SelectTrigger className="w-45 bg-secondary border-border">
                 <SelectValue placeholder="Filtrer par statut" />
               </SelectTrigger>
               <SelectContent>
@@ -168,14 +215,22 @@ export default function ProjectsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
-              <Card key={project.id} className="bg-card border-border hover:border-primary/30 transition-colors">
+              <Card
+                key={project.id}
+                className="bg-card border-border hover:border-primary/30 transition-colors"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{project.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{project.client}</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {project.client}
+                      </p>
                     </div>
-                    <Badge variant="outline" className={statusColors[project.status]}>
+                    <Badge
+                      variant="outline"
+                      className={statusColors[project.status]}
+                    >
                       {statusLabels[project.status]}
                     </Badge>
                   </div>
@@ -193,7 +248,9 @@ export default function ProjectsPage() {
                     <div className="flex items-center gap-2 text-sm">
                       <Euro className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Budget:</span>
-                      <span className="font-medium">{(project.budget / 1000000).toFixed(1)}M€</span>
+                      <span className="font-medium">
+                        {(project.budget / 1000000).toFixed(1)}M€
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -212,7 +269,10 @@ export default function ProjectsPage() {
                       <span>ID: {project.id}</span>
                     </div>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/projects/${project.id}`} className="flex items-center gap-1 text-primary">
+                      <Link
+                        href={`/projects/${project.id}`}
+                        className="flex items-center gap-1 text-primary"
+                      >
                         Détails <ArrowUpRight className="w-3 h-3" />
                       </Link>
                     </Button>
@@ -230,5 +290,5 @@ export default function ProjectsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

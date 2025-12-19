@@ -1,92 +1,139 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { invoices as initialInvoices, projects, type Invoice } from "@/lib/data"
-import { Plus, Search, Euro, Clock, CheckCircle, AlertTriangle, Download, Send, Eye, Trash2 } from "lucide-react"
+import { useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  invoices as initialInvoices,
+  projects,
+  type Invoice,
+} from "@/lib/data";
+import {
+  Plus,
+  Search,
+  Euro,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Download,
+  Send,
+  Eye,
+  Trash2,
+} from "lucide-react";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground border-border",
   sent: "bg-chart-2/20 text-chart-2 border-chart-2/30",
   paid: "bg-chart-1/20 text-chart-1 border-chart-1/30",
   overdue: "bg-destructive/20 text-destructive border-destructive/30",
-}
+};
 
 const statusLabels = {
   draft: "Brouillon",
   sent: "Envoyée",
   paid: "Payée",
   overdue: "En retard",
-}
+};
 
 export default function InvoicesPage() {
-  const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [projectFilter, setProjectFilter] = useState<string>("all")
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
+  const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [projectFilter, setProjectFilter] = useState<string>("all");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [newInvoice, setNewInvoice] = useState({
     projectId: "",
     dueDate: "",
     items: [{ description: "", quantity: "1", unitPrice: "" }],
-  })
+  });
 
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch =
       invoice.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.client.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === "all" || invoice.status === statusFilter
-    const matchesProject = projectFilter === "all" || invoice.projectId === projectFilter
-    return matchesSearch && matchesStatus && matchesProject
-  })
+      invoice.client.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || invoice.status === statusFilter;
+    const matchesProject =
+      projectFilter === "all" || invoice.projectId === projectFilter;
+    return matchesSearch && matchesStatus && matchesProject;
+  });
 
   const stats = {
     total: invoices.reduce((acc, i) => acc + i.amount, 0),
-    paid: invoices.filter((i) => i.status === "paid").reduce((acc, i) => acc + i.amount, 0),
-    pending: invoices.filter((i) => i.status === "sent").reduce((acc, i) => acc + i.amount, 0),
-    overdue: invoices.filter((i) => i.status === "overdue").reduce((acc, i) => acc + i.amount, 0),
-  }
+    paid: invoices
+      .filter((i) => i.status === "paid")
+      .reduce((acc, i) => acc + i.amount, 0),
+    pending: invoices
+      .filter((i) => i.status === "sent")
+      .reduce((acc, i) => acc + i.amount, 0),
+    overdue: invoices
+      .filter((i) => i.status === "overdue")
+      .reduce((acc, i) => acc + i.amount, 0),
+  };
 
   const handleAddItem = () => {
     setNewInvoice({
       ...newInvoice,
-      items: [...newInvoice.items, { description: "", quantity: "1", unitPrice: "" }],
-    })
-  }
+      items: [
+        ...newInvoice.items,
+        { description: "", quantity: "1", unitPrice: "" },
+      ],
+    });
+  };
 
   const handleRemoveItem = (index: number) => {
     setNewInvoice({
       ...newInvoice,
       items: newInvoice.items.filter((_, i) => i !== index),
-    })
-  }
+    });
+  };
 
   const handleItemChange = (index: number, field: string, value: string) => {
-    const updatedItems = [...newInvoice.items]
-    updatedItems[index] = { ...updatedItems[index], [field]: value }
-    setNewInvoice({ ...newInvoice, items: updatedItems })
-  }
+    const updatedItems = [...newInvoice.items];
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
+    setNewInvoice({ ...newInvoice, items: updatedItems });
+  };
 
   const calculateTotal = () => {
     return newInvoice.items.reduce((acc, item) => {
-      return acc + Number(item.quantity) * Number(item.unitPrice)
-    }, 0)
-  }
+      return acc + Number(item.quantity) * Number(item.unitPrice);
+    }, 0);
+  };
 
   const handleCreateInvoice = () => {
-    const project = projects.find((p) => p.id === newInvoice.projectId)
+    const project = projects.find((p) => p.id === newInvoice.projectId);
     const invoice: Invoice = {
-      id: `INV-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(3, "0")}`,
+      id: `INV-${new Date().getFullYear()}-${String(
+        invoices.length + 1
+      ).padStart(3, "0")}`,
       projectId: newInvoice.projectId,
       client: project?.client || "Client inconnu",
       amount: calculateTotal(),
@@ -98,19 +145,26 @@ export default function InvoicesPage() {
         quantity: Number(item.quantity),
         unitPrice: Number(item.unitPrice),
       })),
-    }
-    setInvoices([invoice, ...invoices])
+    };
+    setInvoices([invoice, ...invoices]);
     setNewInvoice({
       projectId: "",
       dueDate: "",
       items: [{ description: "", quantity: "1", unitPrice: "" }],
-    })
-    setIsCreateDialogOpen(false)
-  }
+    });
+    setIsCreateDialogOpen(false);
+  };
 
-  const handleStatusChange = (invoiceId: string, newStatus: Invoice["status"]) => {
-    setInvoices(invoices.map((i) => (i.id === invoiceId ? { ...i, status: newStatus } : i)))
-  }
+  const handleStatusChange = (
+    invoiceId: string,
+    newStatus: Invoice["status"]
+  ) => {
+    setInvoices(
+      invoices.map((i) =>
+        i.id === invoiceId ? { ...i, status: newStatus } : i
+      )
+    );
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -121,9 +175,14 @@ export default function InvoicesPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold">Facturation</h1>
-              <p className="text-muted-foreground">Gérez vos factures et suivez les paiements</p>
+              <p className="text-muted-foreground">
+                Gérez vos factures et suivez les paiements
+              </p>
             </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <Dialog
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" /> Nouvelle Facture
@@ -139,7 +198,9 @@ export default function InvoicesPage() {
                       <Label>Projet</Label>
                       <Select
                         value={newInvoice.projectId}
-                        onValueChange={(value) => setNewInvoice({ ...newInvoice, projectId: value })}
+                        onValueChange={(value) =>
+                          setNewInvoice({ ...newInvoice, projectId: value })
+                        }
                       >
                         <SelectTrigger className="bg-secondary border-border">
                           <SelectValue placeholder="Sélectionner un projet" />
@@ -158,7 +219,12 @@ export default function InvoicesPage() {
                       <Input
                         type="date"
                         value={newInvoice.dueDate}
-                        onChange={(e) => setNewInvoice({ ...newInvoice, dueDate: e.target.value })}
+                        onChange={(e) =>
+                          setNewInvoice({
+                            ...newInvoice,
+                            dueDate: e.target.value,
+                          })
+                        }
                         className="bg-secondary border-border"
                       />
                     </div>
@@ -167,7 +233,11 @@ export default function InvoicesPage() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label>Lignes de facture</Label>
-                      <Button variant="outline" size="sm" onClick={handleAddItem}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleAddItem}
+                      >
                         <Plus className="w-3 h-3 mr-1" /> Ajouter ligne
                       </Button>
                     </div>
@@ -177,21 +247,39 @@ export default function InvoicesPage() {
                           <Input
                             placeholder="Description"
                             value={item.description}
-                            onChange={(e) => handleItemChange(index, "description", e.target.value)}
+                            onChange={(e) =>
+                              handleItemChange(
+                                index,
+                                "description",
+                                e.target.value
+                              )
+                            }
                             className="flex-1 bg-secondary border-border"
                           />
                           <Input
                             type="number"
                             placeholder="Qté"
                             value={item.quantity}
-                            onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
+                            onChange={(e) =>
+                              handleItemChange(
+                                index,
+                                "quantity",
+                                e.target.value
+                              )
+                            }
                             className="w-20 bg-secondary border-border"
                           />
                           <Input
                             type="number"
                             placeholder="Prix unitaire"
                             value={item.unitPrice}
-                            onChange={(e) => handleItemChange(index, "unitPrice", e.target.value)}
+                            onChange={(e) =>
+                              handleItemChange(
+                                index,
+                                "unitPrice",
+                                e.target.value
+                              )
+                            }
                             className="w-32 bg-secondary border-border"
                           />
                           <Button
@@ -211,11 +299,16 @@ export default function InvoicesPage() {
                   <div className="flex justify-end pt-4 border-t border-border">
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">Total HT</p>
-                      <p className="text-2xl font-bold">{calculateTotal().toLocaleString("fr-FR")} €</p>
+                      <p className="text-2xl font-bold">
+                        {calculateTotal().toLocaleString("fr-FR")} €
+                      </p>
                     </div>
                   </div>
 
-                  <Button onClick={handleCreateInvoice} className="w-full bg-primary text-primary-foreground">
+                  <Button
+                    onClick={handleCreateInvoice}
+                    className="w-full bg-primary text-primary-foreground"
+                  >
                     Créer la facture
                   </Button>
                 </div>
@@ -231,8 +324,12 @@ export default function InvoicesPage() {
                     <Euro className="w-5 h-5 text-chart-2" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Facturé</p>
-                    <p className="text-2xl font-bold">{(stats.total / 1000).toFixed(0)}K€</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Facturé
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {(stats.total / 1000).toFixed(0)}K€
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -245,7 +342,9 @@ export default function InvoicesPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Encaissé</p>
-                    <p className="text-2xl font-bold">{(stats.paid / 1000).toFixed(0)}K€</p>
+                    <p className="text-2xl font-bold">
+                      {(stats.paid / 1000).toFixed(0)}K€
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -258,7 +357,9 @@ export default function InvoicesPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">En attente</p>
-                    <p className="text-2xl font-bold">{(stats.pending / 1000).toFixed(0)}K€</p>
+                    <p className="text-2xl font-bold">
+                      {(stats.pending / 1000).toFixed(0)}K€
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -271,7 +372,9 @@ export default function InvoicesPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">En retard</p>
-                    <p className="text-2xl font-bold text-destructive">{(stats.overdue / 1000).toFixed(0)}K€</p>
+                    <p className="text-2xl font-bold text-destructive">
+                      {(stats.overdue / 1000).toFixed(0)}K€
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -291,7 +394,7 @@ export default function InvoicesPage() {
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[160px] bg-secondary border-border">
+                  <SelectTrigger className="w-40 bg-secondary border-border">
                     <SelectValue placeholder="Statut" />
                   </SelectTrigger>
                   <SelectContent>
@@ -303,7 +406,7 @@ export default function InvoicesPage() {
                   </SelectContent>
                 </Select>
                 <Select value={projectFilter} onValueChange={setProjectFilter}>
-                  <SelectTrigger className="w-[200px] bg-secondary border-border">
+                  <SelectTrigger className="w-50 bg-secondary border-border">
                     <SelectValue placeholder="Projet" />
                   </SelectTrigger>
                   <SelectContent>
@@ -333,16 +436,31 @@ export default function InvoicesPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredInvoices.map((invoice) => {
-                      const project = projects.find((p) => p.id === invoice.projectId)
+                      const project = projects.find(
+                        (p) => p.id === invoice.projectId
+                      );
                       return (
                         <TableRow key={invoice.id} className="border-border">
-                          <TableCell className="font-mono font-medium">{invoice.id}</TableCell>
+                          <TableCell className="font-mono font-medium">
+                            {invoice.id}
+                          </TableCell>
                           <TableCell>{invoice.client}</TableCell>
-                          <TableCell className="max-w-[150px] truncate">{project?.name || "-"}</TableCell>
-                          <TableCell className="font-medium">{invoice.amount.toLocaleString("fr-FR")} €</TableCell>
-                          <TableCell>{new Date(invoice.dueDate).toLocaleDateString("fr-FR")}</TableCell>
+                          <TableCell className="max-w-37.5 truncate">
+                            {project?.name || "-"}
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {invoice.amount.toLocaleString("fr-FR")} €
+                          </TableCell>
                           <TableCell>
-                            <Badge variant="outline" className={statusColors[invoice.status]}>
+                            {new Date(invoice.dueDate).toLocaleDateString(
+                              "fr-FR"
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={statusColors[invoice.status]}
+                            >
                               {statusLabels[invoice.status]}
                             </Badge>
                           </TableCell>
@@ -363,51 +481,73 @@ export default function InvoicesPage() {
                                   size="icon"
                                   className="h-8 w-8"
                                   title="Envoyer"
-                                  onClick={() => handleStatusChange(invoice.id, "sent")}
+                                  onClick={() =>
+                                    handleStatusChange(invoice.id, "sent")
+                                  }
                                 >
                                   <Send className="w-4 h-4 text-chart-2" />
                                 </Button>
                               )}
-                              {(invoice.status === "sent" || invoice.status === "overdue") && (
+                              {(invoice.status === "sent" ||
+                                invoice.status === "overdue") && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8"
                                   title="Marquer payée"
-                                  onClick={() => handleStatusChange(invoice.id, "paid")}
+                                  onClick={() =>
+                                    handleStatusChange(invoice.id, "paid")
+                                  }
                                 >
                                   <CheckCircle className="w-4 h-4 text-chart-1" />
                                 </Button>
                               )}
-                              <Button variant="ghost" size="icon" className="h-8 w-8" title="Télécharger">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                title="Télécharger"
+                              >
                                 <Download className="w-4 h-4" />
                               </Button>
                             </div>
                           </TableCell>
                         </TableRow>
-                      )
+                      );
                     })}
                   </TableBody>
                 </Table>
               </div>
               {filteredInvoices.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">Aucune facture trouvée</p>
+                <p className="text-center text-muted-foreground py-8">
+                  Aucune facture trouvée
+                </p>
               )}
             </CardContent>
           </Card>
 
           {/* Invoice Detail Dialog */}
-          <Dialog open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+          <Dialog
+            open={!!selectedInvoice}
+            onOpenChange={() => setSelectedInvoice(null)}
+          >
             <DialogContent className="bg-card border-border max-w-2xl">
               {selectedInvoice && (
                 <>
                   <DialogHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <DialogTitle className="text-xl font-mono">{selectedInvoice.id}</DialogTitle>
-                        <p className="text-sm text-muted-foreground mt-1">{selectedInvoice.client}</p>
+                        <DialogTitle className="text-xl font-mono">
+                          {selectedInvoice.id}
+                        </DialogTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {selectedInvoice.client}
+                        </p>
                       </div>
-                      <Badge variant="outline" className={statusColors[selectedInvoice.status]}>
+                      <Badge
+                        variant="outline"
+                        className={statusColors[selectedInvoice.status]}
+                      >
                         {statusLabels[selectedInvoice.status]}
                       </Badge>
                     </div>
@@ -417,35 +557,55 @@ export default function InvoicesPage() {
                       <div>
                         <p className="text-xs text-muted-foreground">Projet</p>
                         <p className="text-sm font-medium">
-                          {projects.find((p) => p.id === selectedInvoice.projectId)?.name}
+                          {
+                            projects.find(
+                              (p) => p.id === selectedInvoice.projectId
+                            )?.name
+                          }
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Date de création</p>
+                        <p className="text-xs text-muted-foreground">
+                          Date de création
+                        </p>
                         <p className="text-sm font-medium">
-                          {new Date(selectedInvoice.createdAt).toLocaleDateString("fr-FR")}
+                          {new Date(
+                            selectedInvoice.createdAt
+                          ).toLocaleDateString("fr-FR")}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Échéance</p>
+                        <p className="text-xs text-muted-foreground">
+                          Échéance
+                        </p>
                         <p className="text-sm font-medium">
-                          {new Date(selectedInvoice.dueDate).toLocaleDateString("fr-FR")}
+                          {new Date(selectedInvoice.dueDate).toLocaleDateString(
+                            "fr-FR"
+                          )}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Montant total</p>
-                        <p className="text-sm font-bold">{selectedInvoice.amount.toLocaleString("fr-FR")} €</p>
+                        <p className="text-xs text-muted-foreground">
+                          Montant total
+                        </p>
+                        <p className="text-sm font-bold">
+                          {selectedInvoice.amount.toLocaleString("fr-FR")} €
+                        </p>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium mb-3">Détail des lignes</h4>
+                      <h4 className="text-sm font-medium mb-3">
+                        Détail des lignes
+                      </h4>
                       <Table>
                         <TableHeader>
                           <TableRow className="border-border">
                             <TableHead>Description</TableHead>
                             <TableHead className="text-right">Qté</TableHead>
-                            <TableHead className="text-right">Prix unitaire</TableHead>
+                            <TableHead className="text-right">
+                              Prix unitaire
+                            </TableHead>
                             <TableHead className="text-right">Total</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -453,10 +613,17 @@ export default function InvoicesPage() {
                           {selectedInvoice.items.map((item, index) => (
                             <TableRow key={index} className="border-border">
                               <TableCell>{item.description}</TableCell>
-                              <TableCell className="text-right">{item.quantity}</TableCell>
-                              <TableCell className="text-right">{item.unitPrice.toLocaleString("fr-FR")} €</TableCell>
+                              <TableCell className="text-right">
+                                {item.quantity}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {item.unitPrice.toLocaleString("fr-FR")} €
+                              </TableCell>
                               <TableCell className="text-right font-medium">
-                                {(item.quantity * item.unitPrice).toLocaleString("fr-FR")} €
+                                {(
+                                  item.quantity * item.unitPrice
+                                ).toLocaleString("fr-FR")}{" "}
+                                €
                               </TableCell>
                             </TableRow>
                           ))}
@@ -467,16 +634,24 @@ export default function InvoicesPage() {
                     <div className="flex justify-between items-center pt-4 border-t border-border">
                       <div className="flex gap-2">
                         {selectedInvoice.status === "draft" && (
-                          <Button onClick={() => handleStatusChange(selectedInvoice.id, "sent")}>
+                          <Button
+                            onClick={() =>
+                              handleStatusChange(selectedInvoice.id, "sent")
+                            }
+                          >
                             <Send className="w-4 h-4 mr-2" /> Envoyer
                           </Button>
                         )}
-                        {(selectedInvoice.status === "sent" || selectedInvoice.status === "overdue") && (
+                        {(selectedInvoice.status === "sent" ||
+                          selectedInvoice.status === "overdue") && (
                           <Button
-                            onClick={() => handleStatusChange(selectedInvoice.id, "paid")}
+                            onClick={() =>
+                              handleStatusChange(selectedInvoice.id, "paid")
+                            }
                             className="bg-chart-1 text-primary-foreground hover:bg-chart-1/90"
                           >
-                            <CheckCircle className="w-4 h-4 mr-2" /> Marquer payée
+                            <CheckCircle className="w-4 h-4 mr-2" /> Marquer
+                            payée
                           </Button>
                         )}
                         <Button variant="outline">
@@ -484,8 +659,12 @@ export default function InvoicesPage() {
                         </Button>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Total TTC</p>
-                        <p className="text-2xl font-bold">{selectedInvoice.amount.toLocaleString("fr-FR")} €</p>
+                        <p className="text-sm text-muted-foreground">
+                          Total TTC
+                        </p>
+                        <p className="text-2xl font-bold">
+                          {selectedInvoice.amount.toLocaleString("fr-FR")} €
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -496,5 +675,5 @@ export default function InvoicesPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

@@ -1,58 +1,86 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { tools as initialTools, projects, type Tool } from "@/lib/data"
-import { Plus, Search, Wrench, CheckCircle, Clock, AlertTriangle, ScanLine } from "lucide-react"
+import { useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { tools as initialTools, projects, type Tool } from "@/lib/data";
+import {
+  Plus,
+  Search,
+  Wrench,
+  CheckCircle,
+  Clock,
+  AlertTriangle,
+  ScanLine,
+} from "lucide-react";
 
 const statusColors = {
   available: "bg-chart-1/20 text-chart-1 border-chart-1/30",
   "in-use": "bg-chart-2/20 text-chart-2 border-chart-2/30",
   maintenance: "bg-warning/20 text-warning border-warning/30",
-}
+};
 
 const statusLabels = {
   available: "Disponible",
   "in-use": "En utilisation",
   maintenance: "Maintenance",
-}
+};
 
 export default function ToolsPage() {
-  const [tools, setTools] = useState<Tool[]>(initialTools)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isScanDialogOpen, setIsScanDialogOpen] = useState(false)
-  const [scanCode, setScanCode] = useState("")
-  const [scanResult, setScanResult] = useState<Tool | null>(null)
+  const [tools, setTools] = useState<Tool[]>(initialTools);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isScanDialogOpen, setIsScanDialogOpen] = useState(false);
+  const [scanCode, setScanCode] = useState("");
+  const [scanResult, setScanResult] = useState<Tool | null>(null);
   const [newTool, setNewTool] = useState({
     name: "",
     code: "",
-  })
+  });
 
   const filteredTools = tools.filter((tool) => {
     const matchesSearch =
       tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.code.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === "all" || tool.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      tool.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || tool.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const stats = {
     total: tools.length,
     available: tools.filter((t) => t.status === "available").length,
     inUse: tools.filter((t) => t.status === "in-use").length,
     maintenance: tools.filter((t) => t.status === "maintenance").length,
-  }
+  };
 
   const handleAddTool = () => {
     const tool: Tool = {
@@ -61,28 +89,36 @@ export default function ToolsPage() {
       code: newTool.code,
       status: "available",
       lastMaintenance: new Date().toISOString().split("T")[0],
-    }
-    setTools([...tools, tool])
-    setNewTool({ name: "", code: "" })
-    setIsAddDialogOpen(false)
-  }
+    };
+    setTools([...tools, tool]);
+    setNewTool({ name: "", code: "" });
+    setIsAddDialogOpen(false);
+  };
 
   const handleScanTool = () => {
-    const tool = tools.find((t) => t.code.toLowerCase() === scanCode.toLowerCase())
-    setScanResult(tool || null)
-  }
+    const tool = tools.find(
+      (t) => t.code.toLowerCase() === scanCode.toLowerCase()
+    );
+    setScanResult(tool || null);
+  };
 
   const handleToggleStatus = (toolId: string) => {
     setTools(
       tools.map((t) => {
         if (t.id === toolId) {
-          const newStatus: Tool["status"] = t.status === "available" ? "in-use" : "available"
-          return { ...t, status: newStatus, assignedTo: newStatus === "in-use" ? "Utilisateur actuel" : undefined }
+          const newStatus: Tool["status"] =
+            t.status === "available" ? "in-use" : "available";
+          return {
+            ...t,
+            status: newStatus,
+            assignedTo:
+              newStatus === "in-use" ? "Utilisateur actuel" : undefined,
+          };
         }
-        return t
-      }),
-    )
-  }
+        return t;
+      })
+    );
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -93,12 +129,20 @@ export default function ToolsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold">Outillage</h1>
-              <p className="text-muted-foreground">Gérez et suivez vos outils et équipements</p>
+              <p className="text-muted-foreground">
+                Gérez et suivez vos outils et équipements
+              </p>
             </div>
             <div className="flex gap-2">
-              <Dialog open={isScanDialogOpen} onOpenChange={setIsScanDialogOpen}>
+              <Dialog
+                open={isScanDialogOpen}
+                onOpenChange={setIsScanDialogOpen}
+              >
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2 bg-transparent">
+                  <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 bg-transparent"
+                  >
                     <ScanLine className="w-4 h-4" /> Scanner Outil
                   </Button>
                 </DialogTrigger>
@@ -118,7 +162,10 @@ export default function ToolsPage() {
                         autoFocus
                       />
                     </div>
-                    <Button onClick={handleScanTool} className="w-full bg-primary text-primary-foreground">
+                    <Button
+                      onClick={handleScanTool}
+                      className="w-full bg-primary text-primary-foreground"
+                    >
                       Rechercher
                     </Button>
 
@@ -128,34 +175,49 @@ export default function ToolsPage() {
                           <div className="flex items-start justify-between">
                             <div>
                               <h4 className="font-medium">{scanResult.name}</h4>
-                              <p className="text-sm text-muted-foreground font-mono">{scanResult.code}</p>
+                              <p className="text-sm text-muted-foreground font-mono">
+                                {scanResult.code}
+                              </p>
                               {scanResult.assignedTo && (
                                 <p className="text-sm text-muted-foreground mt-1">
                                   Utilisé par: {scanResult.assignedTo}
                                 </p>
                               )}
                             </div>
-                            <Badge variant="outline" className={statusColors[scanResult.status]}>
+                            <Badge
+                              variant="outline"
+                              className={statusColors[scanResult.status]}
+                            >
                               {statusLabels[scanResult.status]}
                             </Badge>
                           </div>
                           <Button
                             onClick={() => handleToggleStatus(scanResult.id)}
                             className="w-full mt-4"
-                            variant={scanResult.status === "available" ? "default" : "outline"}
+                            variant={
+                              scanResult.status === "available"
+                                ? "default"
+                                : "outline"
+                            }
                           >
-                            {scanResult.status === "available" ? "Prendre l'outil" : "Retourner l'outil"}
+                            {scanResult.status === "available"
+                              ? "Prendre l'outil"
+                              : "Retourner l'outil"}
                           </Button>
                         </CardContent>
                       </Card>
                     )}
 
                     {scanCode && !scanResult && (
-                      <p className="text-sm text-destructive text-center">Outil non trouvé</p>
+                      <p className="text-sm text-destructive text-center">
+                        Outil non trouvé
+                      </p>
                     )}
 
                     <div className="border-t border-border pt-4">
-                      <p className="text-xs text-muted-foreground mb-2">Codes disponibles pour test:</p>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Codes disponibles pour test:
+                      </p>
                       <div className="flex flex-wrap gap-2">
                         {tools.slice(0, 5).map((t) => (
                           <Badge
@@ -188,7 +250,9 @@ export default function ToolsPage() {
                       <Input
                         placeholder="Ex: Perceuse Hilti"
                         value={newTool.name}
-                        onChange={(e) => setNewTool({ ...newTool, name: e.target.value })}
+                        onChange={(e) =>
+                          setNewTool({ ...newTool, name: e.target.value })
+                        }
                         className="bg-secondary border-border"
                       />
                     </div>
@@ -197,11 +261,16 @@ export default function ToolsPage() {
                       <Input
                         placeholder="Ex: PER-HIL-001"
                         value={newTool.code}
-                        onChange={(e) => setNewTool({ ...newTool, code: e.target.value })}
+                        onChange={(e) =>
+                          setNewTool({ ...newTool, code: e.target.value })
+                        }
                         className="bg-secondary border-border"
                       />
                     </div>
-                    <Button onClick={handleAddTool} className="w-full bg-primary text-primary-foreground">
+                    <Button
+                      onClick={handleAddTool}
+                      className="w-full bg-primary text-primary-foreground"
+                    >
                       Ajouter
                     </Button>
                   </div>
@@ -218,7 +287,9 @@ export default function ToolsPage() {
                     <Wrench className="w-5 h-5 text-chart-2" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Outils</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Outils
+                    </p>
                     <p className="text-2xl font-bold">{stats.total}</p>
                   </div>
                 </div>
@@ -244,7 +315,9 @@ export default function ToolsPage() {
                     <Clock className="w-5 h-5 text-chart-2" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">En utilisation</p>
+                    <p className="text-sm text-muted-foreground">
+                      En utilisation
+                    </p>
                     <p className="text-2xl font-bold">{stats.inUse}</p>
                   </div>
                 </div>
@@ -278,7 +351,7 @@ export default function ToolsPage() {
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px] bg-secondary border-border">
+                  <SelectTrigger className="w-45 bg-secondary border-border">
                     <SelectValue placeholder="Statut" />
                   </SelectTrigger>
                   <SelectContent>
@@ -306,19 +379,34 @@ export default function ToolsPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredTools.map((tool) => {
-                      const project = projects.find((p) => p.id === tool.projectId)
+                      const project = projects.find(
+                        (p) => p.id === tool.projectId
+                      );
                       return (
                         <TableRow key={tool.id} className="border-border">
-                          <TableCell className="font-medium">{tool.name}</TableCell>
-                          <TableCell className="font-mono text-sm">{tool.code}</TableCell>
+                          <TableCell className="font-medium">
+                            {tool.name}
+                          </TableCell>
+                          <TableCell className="font-mono text-sm">
+                            {tool.code}
+                          </TableCell>
                           <TableCell>
-                            <Badge variant="outline" className={statusColors[tool.status]}>
+                            <Badge
+                              variant="outline"
+                              className={statusColors[tool.status]}
+                            >
                               {statusLabels[tool.status]}
                             </Badge>
                           </TableCell>
                           <TableCell>{tool.assignedTo || "-"}</TableCell>
-                          <TableCell className="max-w-[150px] truncate">{project?.name || "-"}</TableCell>
-                          <TableCell>{new Date(tool.lastMaintenance).toLocaleDateString("fr-FR")}</TableCell>
+                          <TableCell className="max-w-37.5 truncate">
+                            {project?.name || "-"}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(tool.lastMaintenance).toLocaleDateString(
+                              "fr-FR"
+                            )}
+                          </TableCell>
                           <TableCell className="text-right">
                             <Button
                               variant="ghost"
@@ -326,22 +414,28 @@ export default function ToolsPage() {
                               onClick={() => handleToggleStatus(tool.id)}
                               disabled={tool.status === "maintenance"}
                             >
-                              {tool.status === "available" ? "Prendre" : tool.status === "in-use" ? "Retourner" : "-"}
+                              {tool.status === "available"
+                                ? "Prendre"
+                                : tool.status === "in-use"
+                                ? "Retourner"
+                                : "-"}
                             </Button>
                           </TableCell>
                         </TableRow>
-                      )
+                      );
                     })}
                   </TableBody>
                 </Table>
               </div>
               {filteredTools.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">Aucun outil trouvé</p>
+                <p className="text-center text-muted-foreground py-8">
+                  Aucun outil trouvé
+                </p>
               )}
             </CardContent>
           </Card>
         </main>
       </div>
     </div>
-  )
+  );
 }

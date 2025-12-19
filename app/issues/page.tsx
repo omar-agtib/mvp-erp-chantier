@@ -1,19 +1,31 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { issues as initialIssues, projects, type Issue } from "@/lib/data"
+import { useState, useRef } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { issues as initialIssues, projects, type Issue } from "@/lib/data";
 import {
   Plus,
   Search,
@@ -26,56 +38,56 @@ import {
   Clock,
   CheckCircle,
   Circle,
-} from "lucide-react"
+} from "lucide-react";
 
 const priorityColors = {
   urgent: "bg-destructive/20 text-destructive border-destructive/30",
   high: "bg-warning/20 text-warning border-warning/30",
   medium: "bg-chart-2/20 text-chart-2 border-chart-2/30",
   low: "bg-muted text-muted-foreground border-border",
-}
+};
 
 const priorityLabels = {
   urgent: "Urgent",
   high: "Haute",
   medium: "Moyenne",
   low: "Basse",
-}
+};
 
 const statusColors = {
   open: "bg-destructive/20 text-destructive border-destructive/30",
   "in-progress": "bg-warning/20 text-warning border-warning/30",
   resolved: "bg-chart-1/20 text-chart-1 border-chart-1/30",
-}
+};
 
 const statusLabels = {
   open: "Ouvert",
   "in-progress": "En cours",
   resolved: "Résolu",
-}
+};
 
 const typeIcons = {
   "non-conformity": AlertCircle,
   modification: FileEdit,
   defect: Bug,
-}
+};
 
 const typeLabels = {
   "non-conformity": "Non-conformité",
   modification: "Modification",
   defect: "Défaut",
-}
+};
 
 export default function IssuesPage() {
-  const [issues, setIssues] = useState<Issue[]>(initialIssues)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [priorityFilter, setPriorityFilter] = useState<string>("all")
-  const [typeFilter, setTypeFilter] = useState<string>("all")
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null)
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [issues, setIssues] = useState<Issue[]>(initialIssues);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [newIssue, setNewIssue] = useState({
     title: "",
@@ -84,25 +96,29 @@ export default function IssuesPage() {
     priority: "medium" as Issue["priority"],
     type: "non-conformity" as Issue["type"],
     reportedBy: "Jean Dupont",
-  })
+  });
 
   const filteredIssues = issues.filter((issue) => {
     const matchesSearch =
       issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      issue.description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === "all" || issue.status === statusFilter
-    const matchesPriority = priorityFilter === "all" || issue.priority === priorityFilter
-    const matchesType = typeFilter === "all" || issue.type === typeFilter
-    return matchesSearch && matchesStatus && matchesPriority && matchesType
-  })
+      issue.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || issue.status === statusFilter;
+    const matchesPriority =
+      priorityFilter === "all" || issue.priority === priorityFilter;
+    const matchesType = typeFilter === "all" || issue.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesPriority && matchesType;
+  });
 
   const stats = {
     total: issues.length,
     open: issues.filter((i) => i.status === "open").length,
     inProgress: issues.filter((i) => i.status === "in-progress").length,
     resolved: issues.filter((i) => i.status === "resolved").length,
-    urgent: issues.filter((i) => i.priority === "urgent" && i.status !== "resolved").length,
-  }
+    urgent: issues.filter(
+      (i) => i.priority === "urgent" && i.status !== "resolved"
+    ).length,
+  };
 
   const handleCreateIssue = () => {
     const issue: Issue = {
@@ -116,8 +132,8 @@ export default function IssuesPage() {
       reportedBy: newIssue.reportedBy,
       reportedAt: new Date().toISOString(),
       imageUrl: uploadedImage || undefined,
-    }
-    setIssues([issue, ...issues])
+    };
+    setIssues([issue, ...issues]);
     setNewIssue({
       title: "",
       description: "",
@@ -125,28 +141,30 @@ export default function IssuesPage() {
       priority: "medium",
       type: "non-conformity",
       reportedBy: "Jean Dupont",
-    })
-    setUploadedImage(null)
-    setIsCreateDialogOpen(false)
-  }
+    });
+    setUploadedImage(null);
+    setIsCreateDialogOpen(false);
+  };
 
   const handleStatusChange = (issueId: string, newStatus: Issue["status"]) => {
-    setIssues(issues.map((i) => (i.id === issueId ? { ...i, status: newStatus } : i)))
+    setIssues(
+      issues.map((i) => (i.id === issueId ? { ...i, status: newStatus } : i))
+    );
     if (selectedIssue?.id === issueId) {
-      setSelectedIssue({ ...selectedIssue, status: newStatus })
+      setSelectedIssue({ ...selectedIssue, status: newStatus });
     }
-  }
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setUploadedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -157,9 +175,14 @@ export default function IssuesPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold">Signalements</h1>
-              <p className="text-muted-foreground">Non-conformités, modifications et défauts sur chantier</p>
+              <p className="text-muted-foreground">
+                Non-conformités, modifications et défauts sur chantier
+              </p>
             </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <Dialog
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" /> Nouveau Signalement
@@ -175,7 +198,9 @@ export default function IssuesPage() {
                     <Input
                       placeholder="Décrivez brièvement le problème..."
                       value={newIssue.title}
-                      onChange={(e) => setNewIssue({ ...newIssue, title: e.target.value })}
+                      onChange={(e) =>
+                        setNewIssue({ ...newIssue, title: e.target.value })
+                      }
                       className="bg-secondary border-border"
                     />
                   </div>
@@ -185,8 +210,13 @@ export default function IssuesPage() {
                     <Textarea
                       placeholder="Décrivez le problème en détail, l'emplacement exact, les impacts potentiels..."
                       value={newIssue.description}
-                      onChange={(e) => setNewIssue({ ...newIssue, description: e.target.value })}
-                      className="bg-secondary border-border min-h-[100px]"
+                      onChange={(e) =>
+                        setNewIssue({
+                          ...newIssue,
+                          description: e.target.value,
+                        })
+                      }
+                      className="bg-secondary border-border min-h-25"
                     />
                   </div>
 
@@ -195,14 +225,23 @@ export default function IssuesPage() {
                       <Label>Type</Label>
                       <Select
                         value={newIssue.type}
-                        onValueChange={(value) => setNewIssue({ ...newIssue, type: value as Issue["type"] })}
+                        onValueChange={(value) =>
+                          setNewIssue({
+                            ...newIssue,
+                            type: value as Issue["type"],
+                          })
+                        }
                       >
                         <SelectTrigger className="bg-secondary border-border">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="non-conformity">Non-conformité</SelectItem>
-                          <SelectItem value="modification">Modification plan</SelectItem>
+                          <SelectItem value="non-conformity">
+                            Non-conformité
+                          </SelectItem>
+                          <SelectItem value="modification">
+                            Modification plan
+                          </SelectItem>
                           <SelectItem value="defect">Défaut</SelectItem>
                         </SelectContent>
                       </Select>
@@ -211,7 +250,12 @@ export default function IssuesPage() {
                       <Label>Priorité</Label>
                       <Select
                         value={newIssue.priority}
-                        onValueChange={(value) => setNewIssue({ ...newIssue, priority: value as Issue["priority"] })}
+                        onValueChange={(value) =>
+                          setNewIssue({
+                            ...newIssue,
+                            priority: value as Issue["priority"],
+                          })
+                        }
                       >
                         <SelectTrigger className="bg-secondary border-border">
                           <SelectValue />
@@ -230,7 +274,9 @@ export default function IssuesPage() {
                     <Label>Projet</Label>
                     <Select
                       value={newIssue.projectId}
-                      onValueChange={(value) => setNewIssue({ ...newIssue, projectId: value })}
+                      onValueChange={(value) =>
+                        setNewIssue({ ...newIssue, projectId: value })
+                      }
                     >
                       <SelectTrigger className="bg-secondary border-border">
                         <SelectValue placeholder="Sélectionner un projet" />
@@ -278,13 +324,18 @@ export default function IssuesPage() {
                       >
                         <div className="flex flex-col items-center gap-2">
                           <Camera className="w-6 h-6 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">Cliquez pour ajouter une photo</span>
+                          <span className="text-sm text-muted-foreground">
+                            Cliquez pour ajouter une photo
+                          </span>
                         </div>
                       </Button>
                     )}
                   </div>
 
-                  <Button onClick={handleCreateIssue} className="w-full bg-primary text-primary-foreground">
+                  <Button
+                    onClick={handleCreateIssue}
+                    className="w-full bg-primary text-primary-foreground"
+                  >
                     Créer le signalement
                   </Button>
                 </div>
@@ -345,7 +396,7 @@ export default function IssuesPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-card border-border border-destructive/30">
+            <Card className="bg-card border-border">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-destructive/10">
@@ -353,7 +404,9 @@ export default function IssuesPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Urgents</p>
-                    <p className="text-2xl font-bold text-destructive">{stats.urgent}</p>
+                    <p className="text-2xl font-bold text-destructive">
+                      {stats.urgent}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -374,7 +427,7 @@ export default function IssuesPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] bg-secondary border-border">
+                    <SelectTrigger className="w-35 bg-secondary border-border">
                       <SelectValue placeholder="Statut" />
                     </SelectTrigger>
                     <SelectContent>
@@ -384,8 +437,11 @@ export default function IssuesPage() {
                       <SelectItem value="resolved">Résolu</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                    <SelectTrigger className="w-[140px] bg-secondary border-border">
+                  <Select
+                    value={priorityFilter}
+                    onValueChange={setPriorityFilter}
+                  >
+                    <SelectTrigger className="w-35 bg-secondary border-border">
                       <SelectValue placeholder="Priorité" />
                     </SelectTrigger>
                     <SelectContent>
@@ -397,12 +453,14 @@ export default function IssuesPage() {
                     </SelectContent>
                   </Select>
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="w-[160px] bg-secondary border-border">
+                    <SelectTrigger className="w-40 bg-secondary border-border">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Tous types</SelectItem>
-                      <SelectItem value="non-conformity">Non-conformité</SelectItem>
+                      <SelectItem value="non-conformity">
+                        Non-conformité
+                      </SelectItem>
                       <SelectItem value="modification">Modification</SelectItem>
                       <SelectItem value="defect">Défaut</SelectItem>
                     </SelectContent>
@@ -413,8 +471,10 @@ export default function IssuesPage() {
             <CardContent>
               <div className="space-y-3">
                 {filteredIssues.map((issue) => {
-                  const project = projects.find((p) => p.id === issue.projectId)
-                  const Icon = typeIcons[issue.type]
+                  const project = projects.find(
+                    (p) => p.id === issue.projectId
+                  );
+                  const Icon = typeIcons[issue.type];
                   return (
                     <div
                       key={issue.id}
@@ -427,8 +487,8 @@ export default function IssuesPage() {
                             issue.priority === "urgent"
                               ? "bg-destructive/10"
                               : issue.priority === "high"
-                                ? "bg-warning/10"
-                                : "bg-muted"
+                              ? "bg-warning/10"
+                              : "bg-muted"
                           }`}
                         >
                           <Icon
@@ -436,8 +496,8 @@ export default function IssuesPage() {
                               issue.priority === "urgent"
                                 ? "text-destructive"
                                 : issue.priority === "high"
-                                  ? "text-warning"
-                                  : "text-muted-foreground"
+                                ? "text-warning"
+                                : "text-muted-foreground"
                             }`}
                           />
                         </div>
@@ -445,21 +505,34 @@ export default function IssuesPage() {
                           <div className="flex items-start justify-between gap-2 mb-2">
                             <div>
                               <h4 className="font-medium">{issue.title}</h4>
-                              <p className="text-sm text-muted-foreground">{project?.name || "Projet inconnu"}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {project?.name || "Projet inconnu"}
+                              </p>
                             </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                              <Badge variant="outline" className={priorityColors[issue.priority]}>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <Badge
+                                variant="outline"
+                                className={priorityColors[issue.priority]}
+                              >
                                 {priorityLabels[issue.priority]}
                               </Badge>
-                              <Badge variant="outline" className={statusColors[issue.status]}>
+                              <Badge
+                                variant="outline"
+                                className={statusColors[issue.status]}
+                              >
                                 {statusLabels[issue.status]}
                               </Badge>
                             </div>
                           </div>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{issue.description}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                            {issue.description}
+                          </p>
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>
-                              Par {issue.reportedBy} - {new Date(issue.reportedAt).toLocaleDateString("fr-FR")}
+                              Par {issue.reportedBy} -{" "}
+                              {new Date(issue.reportedAt).toLocaleDateString(
+                                "fr-FR"
+                              )}
                             </span>
                             <span className="flex items-center gap-1">
                               <Badge variant="outline" className="text-xs">
@@ -470,33 +543,50 @@ export default function IssuesPage() {
                         </div>
                       </div>
                     </div>
-                  )
+                  );
                 })}
                 {filteredIssues.length === 0 && (
-                  <p className="text-center text-muted-foreground py-8">Aucun signalement trouvé</p>
+                  <p className="text-center text-muted-foreground py-8">
+                    Aucun signalement trouvé
+                  </p>
                 )}
               </div>
             </CardContent>
           </Card>
 
           {/* Issue Detail Dialog */}
-          <Dialog open={!!selectedIssue} onOpenChange={() => setSelectedIssue(null)}>
+          <Dialog
+            open={!!selectedIssue}
+            onOpenChange={() => setSelectedIssue(null)}
+          >
             <DialogContent className="bg-card border-border max-w-2xl">
               {selectedIssue && (
                 <>
                   <DialogHeader>
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <DialogTitle className="text-xl">{selectedIssue.title}</DialogTitle>
+                        <DialogTitle className="text-xl">
+                          {selectedIssue.title}
+                        </DialogTitle>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {projects.find((p) => p.id === selectedIssue.projectId)?.name}
+                          {
+                            projects.find(
+                              (p) => p.id === selectedIssue.projectId
+                            )?.name
+                          }
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <Badge variant="outline" className={priorityColors[selectedIssue.priority]}>
+                        <Badge
+                          variant="outline"
+                          className={priorityColors[selectedIssue.priority]}
+                        >
                           {priorityLabels[selectedIssue.priority]}
                         </Badge>
-                        <Badge variant="outline" className={statusColors[selectedIssue.status]}>
+                        <Badge
+                          variant="outline"
+                          className={statusColors[selectedIssue.status]}
+                        >
                           {statusLabels[selectedIssue.status]}
                         </Badge>
                       </div>
@@ -505,22 +595,32 @@ export default function IssuesPage() {
                   <div className="space-y-4 mt-4">
                     <div>
                       <h4 className="text-sm font-medium mb-2">Description</h4>
-                      <p className="text-sm text-muted-foreground">{selectedIssue.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedIssue.description}
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 py-4 border-y border-border">
                       <div>
                         <p className="text-xs text-muted-foreground">Type</p>
-                        <p className="text-sm font-medium">{typeLabels[selectedIssue.type]}</p>
+                        <p className="text-sm font-medium">
+                          {typeLabels[selectedIssue.type]}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Signalé par</p>
-                        <p className="text-sm font-medium">{selectedIssue.reportedBy}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Signalé par
+                        </p>
+                        <p className="text-sm font-medium">
+                          {selectedIssue.reportedBy}
+                        </p>
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Date</p>
                         <p className="text-sm font-medium">
-                          {new Date(selectedIssue.reportedAt).toLocaleDateString("fr-FR", {
+                          {new Date(
+                            selectedIssue.reportedAt
+                          ).toLocaleDateString("fr-FR", {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
@@ -531,13 +631,17 @@ export default function IssuesPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">ID</p>
-                        <p className="text-sm font-medium font-mono">{selectedIssue.id}</p>
+                        <p className="text-sm font-medium font-mono">
+                          {selectedIssue.id}
+                        </p>
                       </div>
                     </div>
 
                     {selectedIssue.imageUrl && (
                       <div>
-                        <h4 className="text-sm font-medium mb-2">Photo jointe</h4>
+                        <h4 className="text-sm font-medium mb-2">
+                          Photo jointe
+                        </h4>
                         <img
                           src={selectedIssue.imageUrl || "/placeholder.svg"}
                           alt="Issue"
@@ -547,31 +651,61 @@ export default function IssuesPage() {
                     )}
 
                     <div>
-                      <h4 className="text-sm font-medium mb-2">Changer le statut</h4>
+                      <h4 className="text-sm font-medium mb-2">
+                        Changer le statut
+                      </h4>
                       <div className="flex gap-2">
                         <Button
-                          variant={selectedIssue.status === "open" ? "default" : "outline"}
+                          variant={
+                            selectedIssue.status === "open"
+                              ? "default"
+                              : "outline"
+                          }
                           size="sm"
-                          onClick={() => handleStatusChange(selectedIssue.id, "open")}
+                          onClick={() =>
+                            handleStatusChange(selectedIssue.id, "open")
+                          }
                           className={
-                            selectedIssue.status === "open" ? "bg-destructive text-destructive-foreground" : ""
+                            selectedIssue.status === "open"
+                              ? "bg-destructive text-destructive-foreground"
+                              : ""
                           }
                         >
                           Ouvert
                         </Button>
                         <Button
-                          variant={selectedIssue.status === "in-progress" ? "default" : "outline"}
+                          variant={
+                            selectedIssue.status === "in-progress"
+                              ? "default"
+                              : "outline"
+                          }
                           size="sm"
-                          onClick={() => handleStatusChange(selectedIssue.id, "in-progress")}
-                          className={selectedIssue.status === "in-progress" ? "bg-warning text-warning-foreground" : ""}
+                          onClick={() =>
+                            handleStatusChange(selectedIssue.id, "in-progress")
+                          }
+                          className={
+                            selectedIssue.status === "in-progress"
+                              ? "bg-warning text-warning-foreground"
+                              : ""
+                          }
                         >
                           En cours
                         </Button>
                         <Button
-                          variant={selectedIssue.status === "resolved" ? "default" : "outline"}
+                          variant={
+                            selectedIssue.status === "resolved"
+                              ? "default"
+                              : "outline"
+                          }
                           size="sm"
-                          onClick={() => handleStatusChange(selectedIssue.id, "resolved")}
-                          className={selectedIssue.status === "resolved" ? "bg-chart-1 text-primary-foreground" : ""}
+                          onClick={() =>
+                            handleStatusChange(selectedIssue.id, "resolved")
+                          }
+                          className={
+                            selectedIssue.status === "resolved"
+                              ? "bg-chart-1 text-primary-foreground"
+                              : ""
+                          }
                         >
                           Résolu
                         </Button>
@@ -585,5 +719,5 @@ export default function IssuesPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

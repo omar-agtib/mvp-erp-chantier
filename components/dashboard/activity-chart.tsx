@@ -1,7 +1,15 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const data = [
   { name: "Lun", deliveries: 12, issues: 2, scans: 45 },
@@ -11,30 +19,61 @@ const data = [
   { name: "Ven", deliveries: 18, issues: 2, scans: 67 },
   { name: "Sam", deliveries: 5, issues: 1, scans: 23 },
   { name: "Dim", deliveries: 2, issues: 0, scans: 8 },
-]
+];
 
 export function ActivityChart() {
   return (
     <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Activité hebdomadaire</CardTitle>
+        <CardTitle className="text-lg font-semibold">
+          Activité hebdomadaire
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px]">
+        <div className="h-62.5">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
-                <linearGradient id="colorDeliveries" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="oklch(0.65 0.18 165)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="oklch(0.65 0.18 165)" stopOpacity={0} />
+                <linearGradient
+                  id="colorDeliveries"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor="oklch(0.65 0.18 165)"
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="oklch(0.65 0.18 165)"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
                 <linearGradient id="colorScans" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="oklch(0.6 0.15 250)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="oklch(0.6 0.15 250)" stopOpacity={0} />
+                  <stop
+                    offset="5%"
+                    stopColor="oklch(0.6 0.15 250)"
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="oklch(0.6 0.15 250)"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.25 0.01 260)" />
-              <XAxis dataKey="name" stroke="oklch(0.6 0.01 260)" fontSize={12} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="oklch(0.25 0.01 260)"
+              />
+              <XAxis
+                dataKey="name"
+                stroke="oklch(0.6 0.01 260)"
+                fontSize={12}
+              />
               <YAxis stroke="oklch(0.6 0.01 260)" fontSize={12} />
               <Tooltip
                 contentStyle={{
@@ -75,5 +114,5 @@ export function ActivityChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

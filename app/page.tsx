@@ -1,10 +1,10 @@
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
-import { StatsCards } from "@/components/dashboard/stats-cards"
-import { ProjectsOverview } from "@/components/dashboard/projects-overview"
-import { RecentIssues } from "@/components/dashboard/recent-issues"
-import { InventoryAlerts } from "@/components/dashboard/inventory-alerts"
-import { ActivityChart } from "@/components/dashboard/activity-chart"
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { StatsCards } from "@/components/dashboard/stats-cards";
+import { ProjectsOverview } from "@/components/dashboard/projects-overview";
+import { RecentIssues } from "@/components/dashboard/recent-issues";
+import { InventoryAlerts } from "@/components/dashboard/inventory-alerts";
+import { ActivityChart } from "@/components/dashboard/activity-chart";
 
 export default function DashboardPage() {
   return (
@@ -15,7 +15,9 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Tableau de bord</h1>
-            <p className="text-muted-foreground">Vue d'ensemble de vos projets et activités</p>
+            <p className="text-muted-foreground">
+              Vue d'ensemble de vos projets et activités
+            </p>
           </div>
 
           <StatsCards />
@@ -32,5 +34,5 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
