@@ -188,7 +188,7 @@ export default function IssuesPage() {
                   <Plus className="w-4 h-4 mr-2" /> Nouveau Signalement
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-card border-border max-w-lg">
+              <DialogContent className="bg-card border-border">
                 <DialogHeader>
                   <DialogTitle>Créer un signalement</DialogTitle>
                 </DialogHeader>
@@ -220,7 +220,7 @@ export default function IssuesPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
                     <div className="space-y-2">
                       <Label>Type</Label>
                       <Select
@@ -232,7 +232,7 @@ export default function IssuesPage() {
                           })
                         }
                       >
-                        <SelectTrigger className="bg-secondary border-border">
+                        <SelectTrigger className="w-full bg-secondary border-border">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -257,7 +257,7 @@ export default function IssuesPage() {
                           })
                         }
                       >
-                        <SelectTrigger className="bg-secondary border-border">
+                        <SelectTrigger className="w-full bg-secondary border-border">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -278,7 +278,7 @@ export default function IssuesPage() {
                         setNewIssue({ ...newIssue, projectId: value })
                       }
                     >
-                      <SelectTrigger className="bg-secondary border-border">
+                      <SelectTrigger className="w-full bg-secondary border-border">
                         <SelectValue placeholder="Sélectionner un projet" />
                       </SelectTrigger>
                       <SelectContent>

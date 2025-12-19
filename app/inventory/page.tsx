@@ -167,11 +167,11 @@ export default function InventoryPage() {
                 Gérez le stock de produits et matériaux
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col-reverse md:flex-row gap-2">
               <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
                 <DialogTrigger asChild>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     className="flex items-center gap-2 bg-transparent"
                   >
                     <ScanLine className="w-4 h-4" /> Scanner
@@ -218,7 +218,7 @@ export default function InventoryPage() {
                         className="bg-secondary border-border"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Quantité</Label>
                         <Input
@@ -272,7 +272,7 @@ export default function InventoryPage() {
                           setNewProduct({ ...newProduct, projectId: value })
                         }
                       >
-                        <SelectTrigger className="bg-secondary border-border">
+                        <SelectTrigger className="w-full bg-secondary border-border">
                           <SelectValue placeholder="Sélectionner un projet" />
                         </SelectTrigger>
                         <SelectContent>

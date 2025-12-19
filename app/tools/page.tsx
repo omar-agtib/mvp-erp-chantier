@@ -133,14 +133,14 @@ export default function ToolsPage() {
                 Gérez et suivez vos outils et équipements
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col-reverse md:flex-row gap-2">
               <Dialog
                 open={isScanDialogOpen}
                 onOpenChange={setIsScanDialogOpen}
               >
                 <DialogTrigger asChild>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     className="flex items-center gap-2 bg-transparent"
                   >
                     <ScanLine className="w-4 h-4" /> Scanner Outil

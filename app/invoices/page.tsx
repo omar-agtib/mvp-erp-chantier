@@ -188,12 +188,12 @@ export default function InvoicesPage() {
                   <Plus className="w-4 h-4 mr-2" /> Nouvelle Facture
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-card border-border max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="bg-card border-border max-h-[70vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Créer une facture</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 mt-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
                     <div className="space-y-2">
                       <Label>Projet</Label>
                       <Select
@@ -202,7 +202,7 @@ export default function InvoicesPage() {
                           setNewInvoice({ ...newInvoice, projectId: value })
                         }
                       >
-                        <SelectTrigger className="bg-secondary border-border">
+                        <SelectTrigger className="w-full bg-secondary border-border">
                           <SelectValue placeholder="Sélectionner un projet" />
                         </SelectTrigger>
                         <SelectContent>
@@ -225,7 +225,7 @@ export default function InvoicesPage() {
                             dueDate: e.target.value,
                           })
                         }
-                        className="bg-secondary border-border"
+                        className="w-full bg-secondary border-border"
                       />
                     </div>
                   </div>
