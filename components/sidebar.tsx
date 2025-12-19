@@ -15,7 +15,7 @@ import {
   ChevronRight,
   Building2,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
@@ -30,6 +30,23 @@ const navigation = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    // Function to check screen size and update sidebar state
+    const checkScreenSize = () => {
+      const mobile = window.innerWidth < 1024; // lg breakpoint (1024px)
+      setCollapsed(mobile);
+    };
+
+    // Check on initial mount
+    checkScreenSize();
+
+    // Add resize listener
+    window.addEventListener("resize", checkScreenSize);
+
+    // Cleanup listener on unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   return (
     <aside
