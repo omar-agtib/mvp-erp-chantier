@@ -559,12 +559,12 @@ export default function IssuesPage() {
             open={!!selectedIssue}
             onOpenChange={() => setSelectedIssue(null)}
           >
-            <DialogContent className="bg-card border-border max-w-2xl">
+            <DialogContent className="bg-card border-border">
               {selectedIssue && (
                 <>
                   <DialogHeader>
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
+                    <div className="flex flex-col-reverse sm:flex-row items-start justify-between gap-4 sm:mt-8">
+                      <div className="text-left">
                         <DialogTitle className="text-xl">
                           {selectedIssue.title}
                         </DialogTitle>
@@ -576,6 +576,7 @@ export default function IssuesPage() {
                           }
                         </p>
                       </div>
+
                       <div className="flex gap-2">
                         <Badge
                           variant="outline"

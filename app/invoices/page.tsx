@@ -531,11 +531,11 @@ export default function InvoicesPage() {
             open={!!selectedInvoice}
             onOpenChange={() => setSelectedInvoice(null)}
           >
-            <DialogContent className="bg-card border-border max-w-2xl">
+            <DialogContent className="bg-card border-border">
               {selectedInvoice && (
                 <>
                   <DialogHeader>
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col-reverse sm:flex-row sm:mt-6 items-start justify-between gap-2">
                       <div>
                         <DialogTitle className="text-xl font-mono">
                           {selectedInvoice.id}
@@ -544,6 +544,7 @@ export default function InvoicesPage() {
                           {selectedInvoice.client}
                         </p>
                       </div>
+
                       <Badge
                         variant="outline"
                         className={statusColors[selectedInvoice.status]}
@@ -553,7 +554,7 @@ export default function InvoicesPage() {
                     </div>
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
-                    <div className="grid grid-cols-2 gap-4 py-4 border-y border-border">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-y border-border">
                       <div>
                         <p className="text-xs text-muted-foreground">Projet</p>
                         <p className="text-sm font-medium">
@@ -564,6 +565,7 @@ export default function InvoicesPage() {
                           }
                         </p>
                       </div>
+
                       <div>
                         <p className="text-xs text-muted-foreground">
                           Date de création
@@ -574,6 +576,7 @@ export default function InvoicesPage() {
                           ).toLocaleDateString("fr-FR")}
                         </p>
                       </div>
+
                       <div>
                         <p className="text-xs text-muted-foreground">
                           Échéance
@@ -584,6 +587,7 @@ export default function InvoicesPage() {
                           )}
                         </p>
                       </div>
+
                       <div>
                         <p className="text-xs text-muted-foreground">
                           Montant total
@@ -598,41 +602,70 @@ export default function InvoicesPage() {
                       <h4 className="text-sm font-medium mb-3">
                         Détail des lignes
                       </h4>
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="border-border">
-                            <TableHead>Description</TableHead>
-                            <TableHead className="text-right">Qté</TableHead>
-                            <TableHead className="text-right">
-                              Prix unitaire
-                            </TableHead>
-                            <TableHead className="text-right">Total</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {selectedInvoice.items.map((item, index) => (
-                            <TableRow key={index} className="border-border">
-                              <TableCell>{item.description}</TableCell>
-                              <TableCell className="text-right">
-                                {item.quantity}
-                              </TableCell>
-                              <TableCell className="text-right">
+                      <div className="hidden md:block">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="border-border">
+                              <TableHead>Description</TableHead>
+                              <TableHead className="text-right">Qté</TableHead>
+                              <TableHead className="text-right">
+                                Prix unitaire
+                              </TableHead>
+                              <TableHead className="text-right">
+                                Total
+                              </TableHead>
+                            </TableRow>
+                          </TableHeader>
+
+                          <TableBody>
+                            {selectedInvoice.items.map((item, index) => (
+                              <TableRow key={index} className="border-border">
+                                <TableCell>{item.description}</TableCell>
+                                <TableCell className="text-right">
+                                  {item.quantity}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  {item.unitPrice.toLocaleString("fr-FR")} €
+                                </TableCell>
+                                <TableCell className="text-right font-medium">
+                                  {(
+                                    item.quantity * item.unitPrice
+                                  ).toLocaleString("fr-FR")}{" "}
+                                  €
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                      <div className="space-y-3 md:hidden">
+                        {selectedInvoice.items.map((item, index) => (
+                          <div
+                            key={index}
+                            className="rounded-lg border border-border p-4 bg-background"
+                          >
+                            <p className="font-medium">{item.description}</p>
+
+                            <div className="mt-2 flex justify-between text-sm text-muted-foreground">
+                              <span>
+                                {item.quantity} ×{" "}
                                 {item.unitPrice.toLocaleString("fr-FR")} €
-                              </TableCell>
-                              <TableCell className="text-right font-medium">
+                              </span>
+                              <span className="font-semibold text-foreground">
                                 {(
                                   item.quantity * item.unitPrice
                                 ).toLocaleString("fr-FR")}{" "}
                                 €
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="flex justify-between items-center pt-4 border-t border-border">
-                      <div className="flex gap-2">
+                    <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center pt-4 border-t border-border gap-4">
+                      {/* Actions */}
+                      <div className="flex flex-col sm:flex-row gap-2">
                         {selectedInvoice.status === "draft" && (
                           <Button
                             onClick={() =>
@@ -642,6 +675,7 @@ export default function InvoicesPage() {
                             <Send className="w-4 h-4 mr-2" /> Envoyer
                           </Button>
                         )}
+
                         {(selectedInvoice.status === "sent" ||
                           selectedInvoice.status === "overdue") && (
                           <Button
@@ -654,11 +688,14 @@ export default function InvoicesPage() {
                             payée
                           </Button>
                         )}
+
                         <Button variant="outline">
                           <Download className="w-4 h-4 mr-2" /> Télécharger PDF
                         </Button>
                       </div>
-                      <div className="text-right">
+
+                      {/* Total */}
+                      <div className="flex flex-col items-start md:items-end gap-1">
                         <p className="text-sm text-muted-foreground">
                           Total TTC
                         </p>
