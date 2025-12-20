@@ -127,4 +127,50 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Custom Scrollbar Styles */
+  /* Option 1: Completely invisible scrollbar (still scrollable) */
+
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Option 2: Minimal modern scrollbar (uncomment to use instead) */
+  /*
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.3 0.01 260) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: oklch(0.3 0.01 260);
+    border-radius: 3px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.4 0.01 260);
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background: oklch(0.35 0.01 260);
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.45 0.01 260);
+  }
+  */
 }
